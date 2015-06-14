@@ -41,5 +41,9 @@ end
 get '/hi' do
   "Hello World!"
 end
+post '/superfeedr' do
+  logger.info params
+  "success"
+end
 
 #thin start -p 8080
