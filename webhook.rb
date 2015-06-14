@@ -6,9 +6,9 @@ require 'logger'
 
 
 ::Logger.class_eval { alias :write :'<<' }
-access_log = ::File.join(::File.dirname(::File.expand_path(__FILE__)),'..','access.log')
+access_log = ::File.join(::File.dirname(::File.expand_path(__FILE__)),'logs','access.log')
 access_logger = ::Logger.new(access_log)
-error_logger = ::File.new(::File.join(::File.dirname(::File.expand_path(__FILE__)),'..','error.log'),"a+")
+error_logger = ::File.new(::File.join(::File.dirname(::File.expand_path(__FILE__)),'logs','error.log'),"a+")
 error_logger.sync = true
 
 
