@@ -17,14 +17,13 @@ configure do
   enable :dump_errors
   enable :show_exceptions
 
-  # Application settings
-  set :host, ENV['HOST']
-  set :login, ENV['SUPERFEEDR_LOGIN']
-  set :password, ENV['SUPERFEEDR_PASSWORD']
-
 end
 
-use(Rack::Superfeedr, { :host => settings.host, :login => settings.login, :password => settings.password, :format => 'json', :async => true }) do |superfeedr|
+Rack::Superfeedr.host = ENV['HOST']
+Rack::Superfeedr.port = settings.port
+
+
+use Rack::Superfeedr do |superfeedr|
 
   superfeedr.on_notification do |feed_id, body, url, request|
     logger.info "------"
@@ -43,4 +42,4 @@ get '/hi' do
   "Hello World!"
 end
 
-#thin start -p 80
+#thin start -p 8080
