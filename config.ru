@@ -1,2 +1,2 @@
-require './web'
+require './webhook'
 run Sinatra::Application
