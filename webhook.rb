@@ -42,7 +42,9 @@ get '/hi' do
   "Hello World!"
 end
 post '/superfeedr' do
-  logger.info params
+  request.body.rewind
+  payload = JSON.parse(request.body.read,:symbolize_names => true)
+  logger.info "PAYLOAD: #{payload}"
   "success"
 end
 
