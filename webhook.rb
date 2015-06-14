@@ -3,7 +3,7 @@
 require 'sinatra'
 require 'rack-superfeedr'
 require 'logger'
-
+require 'json'
 
 ::Logger.class_eval { alias :write :'<<' }
 access_log = ::File.join(::File.dirname(::File.expand_path(__FILE__)),'logs','access.log')
