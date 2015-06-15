@@ -6,5 +6,5 @@ do a bundle install
 `bundle install --path vendor/bundle`
 
 start the server
-`REDIS_SERVER_URL="" HOST="webhook.tomecast.com" bundle exec thin start -p 8080`
+`REDIS_SERVER_URL="" HOST="webhook.tomecast.com" bundle exec thin start -p 8080 -d`
 
