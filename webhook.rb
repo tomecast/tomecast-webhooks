@@ -31,6 +31,9 @@ post '/superfeedr/:podcast_name' do
   payload = JSON.parse(request.body.read,:symbolize_names => true)
   logger.info "PAYLOAD: #{payload}"
 
+  if !payload.has_key?(:items)
+    return 'ignored: nothing to process'
+  end
   podcast_title = params['podcast_name']
   payload[:items].each do |item|
     episode_title = item[:title]
@@ -49,5 +52,5 @@ post '/superfeedr/:podcast_name' do
     Sidekiq::Client.enqueue(SpoutWorker, podcast_title,episode_title,episode_url,pubdate,description)
   end
 
-  "success"
+  return 'success'
 end
