@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 
 require 'sinatra'
-require 'rack-superfeedr'
 require 'logger'
 require 'json'
+require 'time'
 
 ::Logger.class_eval { alias :write :'<<' }
 access_log = ::File.join(::File.dirname(::File.expand_path(__FILE__)),'logs','access.log')
@@ -19,33 +19,32 @@ configure do
 
 end
 
-Rack::Superfeedr.host = ENV['HOST']
-Rack::Superfeedr.port = settings.port
-
-
-use Rack::Superfeedr do |superfeedr|
-
-  superfeedr.on_notification do |feed_id, body, url, request|
-    logger.info "------"
-    logger.info feed_id # You need to have supplied one upon subscription
-    logger.info "------"
-    logger.info body # The body of the notification, a JSON or ATOM string, based on the subscription. Use the Rack::Request object for details
-    logger.info "------"
-    logger.info url # The feed url
-    logger.info "------"
-  end
-
-end
 
 # Maybe serve the data you saved from Superfeedr's handler.
 get '/hi' do
   "Hello World!"
 end
-post '/superfeedr' do
+
+post '/superfeedr/:podcast_name' do
   request.body.rewind
   payload = JSON.parse(request.body.read,:symbolize_names => true)
   logger.info "PAYLOAD: #{payload}"
+
+  podcast_title = params['podcast_name']
+  payload[:items].each do |item|
+    episode_title = item[:title]
+    episode_url = item[:standardLinks][:enclosure][0][:href]
+    pubdate = Time.at(item[:published]).utc.to_datetime
+    description = item[:summary]
+
+    #push to queue
+    logger.info podcast_title
+    logger.info episode_title
+    logger.info episode_url
+    logger.info pubdate
+    logger.info description
+    #podcast_title, episode_title, episode_url, pubdate, description=''
+  end
+
   "success"
 end
-
-#thin start -p 8080
