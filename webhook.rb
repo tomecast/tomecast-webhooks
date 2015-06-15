@@ -4,6 +4,7 @@ require 'sinatra'
 require 'logger'
 require 'json'
 require 'time'
+require_relative 'jobs'
 
 ::Logger.class_eval { alias :write :'<<' }
 access_log = ::File.join(::File.dirname(::File.expand_path(__FILE__)),'logs','access.log')
@@ -34,7 +35,7 @@ post '/superfeedr/:podcast_name' do
   payload[:items].each do |item|
     episode_title = item[:title]
     episode_url = item[:standardLinks][:enclosure][0][:href]
-    pubdate = Time.at(item[:published]).utc.to_datetime
+    pubdate = Time.at(item[:published]).utc.to_datetime.rfc3339
     description = item[:summary]
 
     #push to queue
@@ -44,6 +45,8 @@ post '/superfeedr/:podcast_name' do
     logger.info pubdate
     logger.info description
     #podcast_title, episode_title, episode_url, pubdate, description=''
+
+    Sidekiq::Client.enqueue(SpoutWorker, podcast_title,episode_title,episode_url,pubdate,description)
   end
 
   "success"
