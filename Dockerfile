@@ -16,6 +16,9 @@ run \
     make && \
     make install
 
+run \
+    gem install bundler
+
 
 # copy the application files to the image
 workdir /srv/tomecast-webhooks
