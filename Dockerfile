@@ -7,7 +7,7 @@ run \
 # copy the application files to the image
 workdir /srv/tomecast-webhooks
 copy . /srv/tomecast-webhooks/
-run bundle install --path vendor/bundle
+run bundle install --deployment
 
 
 
