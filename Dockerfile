@@ -12,5 +12,5 @@ run bundle install --path vendor/bundle
 
 
 #finish up
-EXPOSE 8080
-CMD ["bundle", "exec", "thin", "start", "-p", "8080"]
+expose 8080
+cmd ["bundle", "exec", "thin", "start", "-p", "8080"]
