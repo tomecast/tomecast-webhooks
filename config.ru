@@ -12,17 +12,18 @@ Sidekiq.configure_client do |config|
 end
 
 
+#register callback /auth/github/callback
 require 'sinatra_auth_github'
+set :github_options, {
+                       :scopes    => "user",
+                       :client_id => ENV['GITHUB_KEY'],
+                       :secret    => ENV['GITHUB_SECRET']
+                   }
+register Sinatra::Auth::Github
+
 
 module Sidekiq
   class Web
-    set :github_options, {
-                           :scopes    => "user",
-                           :client_id => ENV['GITHUB_KEY'],
-                           :secret    => ENV['GITHUB_SECRET']
-                       }
-
-    register Sinatra::Auth::Github
 
     before do
       authenticate!
@@ -37,7 +38,6 @@ end
 
 map '/sidekiq' do
   use Rack::Session::Cookie, :secret => ENV['RACK_SESSION_COOKIE']
-
   run Sidekiq::Web
 end
 
