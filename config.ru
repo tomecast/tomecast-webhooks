@@ -25,7 +25,7 @@ configure do
 end
 module Sidekiq
   class Web
-
+    include Sinatra::Auth::Github::Helpers
     before do
         authenticate!
         github_organization_authenticate!(ENV['GITHUB_ORG'])
