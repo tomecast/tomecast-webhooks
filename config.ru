@@ -14,20 +14,21 @@ end
 
 #register callback /auth/github/callback
 require 'sinatra_auth_github'
-set :github_options, {
-                       :scopes    => "user",
-                       :client_id => ENV['GITHUB_KEY'],
-                       :secret    => ENV['GITHUB_SECRET']
-                   }
-register Sinatra::Auth::Github
 
-
+configure do
+  set :github_options, {
+                         :scopes    => "user",
+                         :client_id => ENV['GITHUB_KEY'],
+                         :secret    => ENV['GITHUB_SECRET']
+                     }
+  register Sinatra::Auth::Github
+end
 module Sidekiq
   class Web
 
     before do
-      authenticate!
-      github_organization_authenticate!(ENV['GITHUB_ORG'])
+        authenticate!
+        github_organization_authenticate!(ENV['GITHUB_ORG'])
     end
 
     get '/logout' do
