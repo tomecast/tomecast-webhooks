@@ -25,11 +25,12 @@ get '/hi' do
 end
 
 post '/superfeedr/:podcast_name' do
-  request.body.rewind
+  request.body.rewind #- not sure if this is breaking the json parse.
   payload = JSON.parse(request.body.read,:symbolize_names => true)
-  logger.info "PAYLOAD: #{payload}"
+  logger.info "PAYLOAD: #{JSON.pretty_generate(payload)}"
 
   if !payload.has_key?(:items)
+    logger.warn 'ignored: nothing to process (no "items" key)'
     return 'ignored: nothing to process'
   end
   podcast_title = params['podcast_name']
@@ -40,6 +41,7 @@ post '/superfeedr/:podcast_name' do
     description = item[:summary]
 
     #push to queue
+    logger.info 'QUEUING'
     logger.info podcast_title
     logger.info episode_title
     logger.info episode_url

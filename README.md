@@ -6,7 +6,7 @@ do a bundle install
 `bundle install --path vendor/bundle`
 
 start the server
-`REDIS_SERVER_URL="" HOST="webhook.tomecast.com" bundle exec thin start -p 8080 -d`
+`REDIS_SERVER_URL="" bundle exec thin start -p 8080`
 
 
 docker run \
@@ -18,3 +18,7 @@ docker run \
     -d \
     analogj/tomecast-webhooks \
     bundle exec thin start -p 8080
+
+
+#References
+- https://superfeedr.com/users/analogj/subscriptions
