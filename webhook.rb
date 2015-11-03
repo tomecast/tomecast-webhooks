@@ -33,12 +33,12 @@ post '/superfeedr/:podcast_name' do
     logger.warn 'ignored: nothing to process (no "items" key)'
     return 'ignored: nothing to process'
   end
-  podcast_title = params['podcast_name']
+  podcast_title = params['podcast_name'].force_encoding("utf-8")
   payload[:items].each do |item|
-    episode_title = item[:title]
-    episode_url = item[:standardLinks][:enclosure][0][:href]
-    pubdate = Time.at(item[:published]).utc.to_datetime.rfc3339
-    description = item[:summary]
+    episode_title = item[:title].force_encoding("utf-8")
+    episode_url = item[:standardLinks][:enclosure][0][:href].force_encoding("utf-8")
+    pubdate = Time.at(item[:published]).utc.to_datetime.rfc3339.force_encoding("utf-8")
+    description = item[:summary].force_encoding("utf-8")
 
     #push to queue
     logger.info 'QUEUING'
